@@ -1,6 +1,7 @@
-# Electron Wipe Fipe
+# NodeJS Wipe Fipe
 
 ![Electron](https://img.shields.io/badge/Electron-Framework-blue?style=flat-square&logo=electron)
+![Node.js](https://img.shields.io/badge/Node.js-Runtime-green?style=flat-square&logo=nodedotjs)
 
 Инструмент позволяет в удобном формате удалять определённые файлы в один клик
 
