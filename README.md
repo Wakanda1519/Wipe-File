@@ -1,4 +1,4 @@
-# 🗑️ WipeZero
+# 🗑️ Wipe-File
 
 **Удобный инструмент для автоматизации очистки файлов и директорий.**
 
@@ -6,7 +6,7 @@
 ![Node.js](https://img.shields.io/badge/Node.js-Backend-43853D?style=flat-square&logo=node.js&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)
 
-**WipeZero** — это десктопное приложение на Electron, которое позволяет создавать сценарии ("операции") для быстрого удаления мусорных файлов. Забудьте о ручной чистке папок — настройте один раз и удаляйте в один клик.
+**Wipe-File** — это десктопное приложение на Electron, которое позволяет создавать сценарии ("операции") для быстрого удаления мусорных файлов. Забудьте о ручной чистке папок — настройте один раз и удаляйте в один клик.
 
 ---
 
@@ -33,8 +33,8 @@
 
 1.  **Скачайте репозиторий:**
     ```bash
-    git clone https://github.com/Wakanda1519/WipeZero.git
-    cd WipeZero
+    git clone https://github.com/Wakanda1519/Wipe-File.git
+    cd Wipe-File
     ```
 
 2.  **Установите зависимости:**
@@ -68,7 +68,7 @@
 ## 📸 Интерфейс
 
 <p align="center">
-  <img src="https://allwebs.ru/images/2025/06/18/8d0a1822a5d3c5c592997e8f29120000.jpg" alt="Главное меню WipeZero" width="45%">
+  <img src="https://allwebs.ru/images/2025/06/18/8d0a1822a5d3c5c592997e8f29120000.jpg" alt="Главное меню Wipe-File" width="45%">
   <img src="https://allwebs.ru/images/2025/06/18/83c5e88c18b5b48c20ca97bebc1637c6.jpg" alt="Настройка операции" width="45%">
 </p>
 
