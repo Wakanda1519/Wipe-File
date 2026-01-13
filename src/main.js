@@ -2,8 +2,6 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Store = require('electron-store');
-
-// Инициализация хранилища
 const store = new Store();
 
 let mainWindow;
@@ -38,9 +36,6 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit();
 });
 
-// Обработчики IPC
-
-// Выбор файла
 ipcMain.handle('select-file', async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
     properties: ['openFile'],
@@ -53,7 +48,6 @@ ipcMain.handle('select-file', async () => {
   return null;
 });
 
-// Выбор папки
 ipcMain.handle('select-directory', async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
     properties: ['openDirectory'],
@@ -66,7 +60,6 @@ ipcMain.handle('select-directory', async () => {
   return null;
 });
 
-// Удаление файла
 ipcMain.handle('delete-file', async (event, filePath) => {
   try {
     await fs.promises.unlink(filePath);
@@ -76,7 +69,6 @@ ipcMain.handle('delete-file', async (event, filePath) => {
   }
 });
 
-// Удаление файлов в папке по расширениям
 ipcMain.handle('delete-files-in-directory', async (event, { directoryPath, extensions }) => {
   const results = {
     success: [],
@@ -91,7 +83,6 @@ ipcMain.handle('delete-files-in-directory', async (event, { directoryPath, exten
       const filePath = path.join(directoryPath, file);
       const fileExt = path.extname(file).toLowerCase();
       
-      // Проверяем, соответствует ли расширение файла одному из указанных
       if (extensionArray.some(ext => ext.toLowerCase() === fileExt || 
                                     (ext.startsWith('.') ? ext.toLowerCase() === fileExt : `.${ext.toLowerCase()}` === fileExt))) {
         try {
@@ -112,24 +103,20 @@ ipcMain.handle('delete-files-in-directory', async (event, { directoryPath, exten
   }
 });
 
-// Получение операций из хранилища
 ipcMain.handle('get-operations', () => {
   return store.get('operations', []);
 });
 
-// Сохранение операций в хранилище
 ipcMain.handle('save-operations', (event, operations) => {
   store.set('operations', operations);
   return true;
 });
 
-// Получение логов из хранилища
 ipcMain.handle('get-logs', (event, operationId) => {
   const logs = store.get('logs', {});
   return logs[operationId] || { success: [], errors: [] };
 });
 
-// Сохранение логов в хранилище
 ipcMain.handle('save-logs', (event, { operationId, logs }) => {
   const allLogs = store.get('logs', {});
   allLogs[operationId] = logs;
