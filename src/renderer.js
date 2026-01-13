@@ -1,10 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  // Инициализация Bootstrap модальных окон
   const operationModal = new bootstrap.Modal(document.getElementById('operationModal'));
   const logsModal = new bootstrap.Modal(document.getElementById('logsModal'));
   const helpModal = new bootstrap.Modal(document.getElementById('helpModal'));
-  
-  // DOM-элементы
   const operationsContainer = document.getElementById('operationsContainer');
   const emptyState = document.getElementById('emptyState');
   const operationForm = document.getElementById('operationForm');
@@ -24,23 +21,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   const helpBtn = document.getElementById('helpBtn');
   const selectedItemsList = document.getElementById('selectedItemsList');
   const addItemBtn = document.getElementById('addItemBtn');
-  
-  // Логи
   const logsModalTitle = document.getElementById('logsModalTitle');
   const logsSpinner = document.getElementById('logsSpinner');
   const logsContent = document.getElementById('logsContent');
   const successLogs = document.getElementById('successLogs');
   const errorLogs = document.getElementById('errorLogs');
   const logsSummary = document.getElementById('logsSummary');
-  
-  // Загрузка операций
+
   let operations = await window.api.getOperations();
   renderOperations();
-  
-  // Временное хранилище для выбранных элементов
+
   let selectedItems = [];
-  
-  // Обработчики событий
+
   addOperationBtn.addEventListener('click', () => {
     resetOperationForm();
     operationModalTitle.textContent = 'Добавить операцию';
@@ -50,8 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderSelectedItems();
     operationModal.show();
   });
-  
-  // Обработчик для кнопки справки
+
   helpBtn.addEventListener('click', () => {
     helpModal.show();
   });
@@ -78,8 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     
     selectedItems.push(newItem);
-    
-    // Сброс полей формы для добавления следующего элемента
+
     pathDisplay.value = '';
     pathValue.value = '';
     extensions.value = '';
@@ -119,13 +109,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     
     if (operationId.value) {
-      // Редактирование
       const index = operations.findIndex(op => op.id === operationId.value);
       if (index !== -1) {
         operations[index] = operation;
       }
     } else {
-      // Добавление
       operations.push(operation);
     }
     
@@ -142,8 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       operationModal.hide();
     }
   });
-  
-  // Функции
+
   function toggleExtensionsField() {
     if (typeDirectory.checked) {
       extensionsGroup.style.display = 'block';
@@ -202,23 +189,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   
   function renderOperations() {
-    // Очистка контейнера
     const operationCards = operationsContainer.querySelectorAll('.operation-card');
     operationCards.forEach(card => card.remove());
     
-    // Показать/скрыть пустое состояние
     if (operations.length === 0) {
       emptyState.style.display = 'block';
     } else {
       emptyState.style.display = 'none';
       
-      // Отрисовка операций
       operations.forEach(operation => {
         const card = document.createElement('div');
         card.className = 'card operation-card';
         card.dataset.id = operation.id;
         
-        // Подсчет количества файлов и папок
         const fileCount = operation.items.filter(item => item.type === 'file').length;
         const dirCount = operation.items.filter(item => item.type === 'directory').length;
         
@@ -238,16 +221,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
         
         operationsContainer.appendChild(card);
-        
-        // Обработчик клика по карточке
+
         card.addEventListener('click', (e) => {
-          // Если клик не по кнопке редактирования
           if (!e.target.closest('.edit-btn')) {
             executeOperation(operation);
           }
         });
-        
-        // Обработчик клика по кнопке редактирования
+
         const editBtn = card.querySelector('.edit-btn');
         editBtn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -260,8 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   function editOperation(operation) {
     operationId.value = operation.id;
     operationName.value = operation.name;
-    
-    // Загрузка выбранных элементов
+
     selectedItems = [...operation.items];
     renderSelectedItems();
     
@@ -271,12 +250,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     operationModal.show();
   }
-  
-  // Функция для выполнения операции с подтверждением
+
   async function executeOperation(operation) {
-    // Показываем диалог подтверждения
     if (!confirm(`Вы уверены, что хотите запустить операцию "${operation.name}"?\nЭто приведет к удалению файлов, которое невозможно отменить.`)) {
-      return; // Если пользователь отменил, прерываем выполнение
+      return;
     }
     
     logsModalTitle.textContent = `Логи операции: ${operation.name}`;
@@ -291,8 +268,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       success: [],
       errors: []
     };
-    
-    // Выполнение операций для каждого элемента
+
     for (const item of operation.items) {
       let results;
       
@@ -308,40 +284,32 @@ document.addEventListener('DOMContentLoaded', async () => {
           extensions: item.extensions
         });
       }
-      
-      // Объединение результатов
+
       allResults.success = [...allResults.success, ...results.success];
       allResults.errors = [...allResults.errors, ...results.errors];
     }
-    
-    // Сохранение логов
+
     await window.api.saveLogs({
       operationId: operation.id,
       logs: allResults
     });
-    
-    // Добавляем задержку в 1 секунду перед показом логов
+
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Отображение логов
+
     displayLogs(allResults);
   }
   
   function displayLogs(logs) {
-    // Скрыть спиннер, показать контент
     logsSpinner.style.display = 'none';
     logsContent.style.display = 'block';
     
-    // Очистка предыдущих логов
     successLogs.innerHTML = '';
     errorLogs.innerHTML = '';
-    
-    // Добавление успешных операций
+
     if (logs.success.length > 0) {
       logs.success.forEach(path => {
         const li = document.createElement('li');
         li.textContent = path;
-        // Добавляем title для возможности просмотра полного пути при наведении
         li.title = path;
         successLogs.appendChild(li);
       });
@@ -350,16 +318,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       li.textContent = 'Нет успешно удаленных файлов';
       successLogs.appendChild(li);
     }
-    
-    // Добавление ошибок
+
     if (logs.errors.length > 0) {
       logs.errors.forEach(error => {
         const li = document.createElement('li');
-        
-        // Форматируем сообщение об ошибке для лучшей читаемости
+
         let errorMessage = error.error;
-        
-        // Преобразуем технические сообщения об ошибках в более понятные
+
         if (errorMessage.includes('no such file or directory')) {
           errorMessage = 'Файл не найден';
         } else if (errorMessage.includes('permission denied')) {
@@ -369,8 +334,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (errorMessage.includes('directory not empty')) {
           errorMessage = 'Папка не пуста';
         }
-        
-        // Получаем имя файла из пути
+
         const fileName = error.path.split(/[/\\]/).pop();
         
         li.textContent = `${fileName}: ${errorMessage}`;
@@ -382,8 +346,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       li.textContent = 'Нет ошибок';
       errorLogs.appendChild(li);
     }
-    
-    // Обновление сводки
+
     logsSummary.textContent = `Успешно: ${logs.success.length}, Ошибок: ${logs.errors.length}`;
   }
+
 }); 
